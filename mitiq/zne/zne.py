@@ -21,6 +21,7 @@ from mitiq._typing import QPROGRAM
 from mitiq.zne.inference import Factory, RichardsonFactory
 from mitiq.zne.scaling import fold_gates_at_random
 
+from matplotlib import pyplot as plt
 
 def execute_with_zne(
     qp: QPROGRAM,
@@ -59,7 +60,17 @@ def execute_with_zne(
     if num_to_average < 1:
         raise ValueError("Argument `num_to_average` must be a positive int.")
 
-    return factory.run(qp, executor, scale_noise, int(num_to_average)).reduce()
+    factory.run(qp, executor, scale_noise, int(num_to_average))
+    
+    # print(factory.get_scale_factors())
+    # print(factory.get_expectation_values())
+
+    zero_lim = factory.reduce()
+    
+    plt.plot(factory.get_scale_factors(), factory.get_expectation_values(), 'bo')
+    plt.show()
+
+    return zero_lim
 
 
 def mitigate_executor(

@@ -37,6 +37,8 @@ from scipy.optimize import curve_fit, OptimizeWarning
 from mitiq import QPROGRAM
 from mitiq.utils import _are_close_dict
 
+from matplotlib import pyplot as plt
+import numpy as np
 
 class ExtrapolationError(Exception):
     """Error raised by :class:`.Factory` objects when
@@ -685,6 +687,15 @@ class PolyFactory(BatchedFactory):
 
         opt_params = mitiq_polyfit(scale_factors, exp_values, order)
         zero_lim = opt_params[-1]
+
+        x = np.linspace(0, max(scale_factors), 50)
+        y = np.zeros(50)
+
+        for n, coeff in enumerate(list(reversed(opt_params))):
+            y = np.add(y, coeff * np.power(x,n))
+        
+        plt.plot(x, y)
+
         return (zero_lim, opt_params) if full_output else zero_lim
 
     def __init__(
@@ -860,6 +871,7 @@ class LinearFactory(BatchedFactory):
             full_output=True,
         )
         self._already_reduced = True
+
         return zero_lim
 
 

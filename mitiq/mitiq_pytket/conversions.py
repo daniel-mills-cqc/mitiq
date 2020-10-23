@@ -4,6 +4,7 @@ pytket's circuit representation.
 import cirq
 import pytket
 from pytket.cirq import cirq_to_tk, tk_to_cirq
+from pytket.passes import RebaseCirq
 
 def to_pytket(circuit: cirq.Circuit) -> pytket.Circuit:
     """Returns a pytket circuit equivalent to the input Mitiq circuit.
@@ -26,4 +27,6 @@ def from_pytket(circuit: pytket.Circuit) -> cirq.Circuit:
     Returns:
         Mitiq circuit representation equivalent to the input pytket circuit.
     """
-    return tk_to_cirq(circuit)
+    rebased_circuit = circuit.copy()
+    RebaseCirq().apply(rebased_circuit)
+    return tk_to_cirq(rebased_circuit)

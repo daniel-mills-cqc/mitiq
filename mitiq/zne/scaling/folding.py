@@ -33,7 +33,6 @@ from cirq import Circuit, InsertStrategy, inverse, ops, has_unitary
 from mitiq._typing import QPROGRAM
 from mitiq.conversions import converter
 
-
 class UnfoldableGateError(Exception):
     pass
 
@@ -91,11 +90,11 @@ def _append_measurements(
         measurements: measurements to perform.
     """
     new_measurements: List[Tuple[int, ops.Operation]] = []
+
     for i in range(len(measurements)):
         # Make sure the moment to insert into is the last in the circuit
         new_measurements.append((len(circuit) + 1, measurements[i][1]))
     circuit.batch_insert(new_measurements)
-
 
 def _check_foldable(circuit: Circuit) -> None:
     """Raises an error if the input circuit cannot be folded.
@@ -680,8 +679,10 @@ def fold_gates_at_random(
             break
 
     _append_measurements(folded, measurements)
+
     if not (kwargs.get("squash_moments") is False):
         folded = squash_moments(folded)
+
     return folded
 
 
