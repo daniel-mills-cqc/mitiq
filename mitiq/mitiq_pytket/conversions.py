@@ -15,7 +15,9 @@ def to_pytket(circuit: cirq.Circuit) -> pytket.Circuit:
     Returns:
         pytket.Circuit object equivalent to the input Mitiq circuit.
     """
-    return cirq_to_tk(circuit)
+    tk_circ = cirq_to_tk(circuit)
+    tk_circ.flatten_registers()
+    return tk_circ
 
 
 def from_pytket(circuit: pytket.Circuit) -> cirq.Circuit:
